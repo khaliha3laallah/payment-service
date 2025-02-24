@@ -38,6 +38,11 @@ payment:
     delay: 24
   methods: CARTE_BANCAIRE,PAYPAL,VIREMENT
 
+stripe:
+  api:
+    key: pk_test_51OltzlAd0Mrqfr6LkjyUSQ4nRelnTjXpUHK9dzew86gKoLa1wHMrSYYSSc2E9TSzH2vg0IjxmYeA5vDAbWqd0MeT00BFxVuutm
+  webhook:
+    secret: whsec_votreclésecretstripe
 logging:
   level:
     org:

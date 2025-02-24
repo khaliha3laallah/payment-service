@@ -35,6 +35,12 @@ public class Transaction {
     @Column(length = 1000)
     private String detailsTransaction;
 
+    @Column(name = "stripe_payment_intent_id")
+    private String stripePaymentIntentId;
+
+    @Column(name = "stripe_payment_method")
+    private String stripePaymentMethod;
+
     public enum StatutTransaction {
         INITIEE,
         EN_COURS,

@@ -31,7 +31,6 @@ public class PaymentService {
     @Autowired
     @Qualifier("mockOrderService")
     private OrderServiceClient orderServiceClient;
-
     @Value("${payment.expiration.delay:24}")
     private int paymentExpirationDelay;
 
@@ -55,6 +54,34 @@ public class PaymentService {
         transactionService.saveTransaction(transaction);
 
         return mapToDTO(paiement);
+    }
+
+    @Transactional
+    public void updateStripePaymentIntentId(Long paiementId, String paymentIntentId) {
+        Paiement paiement = paiementRepository.findById(paiementId)
+                .orElseThrow(() -> new PaymentNotFoundException(paiementId));
+
+        // On recherche la transaction la plus récente
+        if (!paiement.getTransactions().isEmpty()) {
+            Transaction lastTransaction = paiement.getTransactions().get(paiement.getTransactions().size() - 1);
+            lastTransaction.setStripePaymentIntentId(paymentIntentId);
+            transactionService.saveTransaction(lastTransaction);
+            log.info("PaymentIntent ID Stripe mis à jour pour la transaction: {}", lastTransaction.getId());
+        }
+    }
+
+    @Transactional
+    public void updateStripePaymentMethod(Long paiementId, String paymentMethod) {
+        Paiement paiement = paiementRepository.findById(paiementId)
+                .orElseThrow(() -> new PaymentNotFoundException(paiementId));
+
+        // On recherche la transaction la plus récente
+        if (!paiement.getTransactions().isEmpty()) {
+            Transaction lastTransaction = paiement.getTransactions().get(paiement.getTransactions().size() - 1);
+            lastTransaction.setStripePaymentMethod(paymentMethod);
+            transactionService.saveTransaction(lastTransaction);
+            log.info("Payment Method ID Stripe mis à jour pour la transaction: {}", lastTransaction.getId());
+        }
     }
 
     @Transactional(readOnly = true)
